@@ -191,6 +191,13 @@ void Value::set_empty_string(int len)
   
 }
 
+void Value::set_date(int val) {
+    reset();
+    attr_type_ = AttrType::DATES;
+    value_.int_value_ = val;
+    length_ = sizeof(val);
+}
+
 void Value::set_value(const Value &value)
 {
   switch (value.attr_type_) {
@@ -221,6 +228,7 @@ void Value::set_string_from_other(const Value &other)
     this->value_.pointer_value_[this->length_] = '\0';
   }
 }
+
 
 char *Value::data() const
 {

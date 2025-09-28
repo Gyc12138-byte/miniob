@@ -92,6 +92,7 @@ public:
   void set_data(const char *data, int length) { this->set_data(const_cast<char *>(data), length); }
   void set_value(const Value &value);
   void set_boolean(bool val);
+  void set_date(int val);
 
   string to_string() const;
 
@@ -112,6 +113,7 @@ public:
   string   get_string() const;
   string_t get_string_t() const;
   bool     get_boolean() const;
+  int      get_date() const;
 
 public:
   void set_int(int val);

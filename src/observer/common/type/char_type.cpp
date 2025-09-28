@@ -29,17 +29,38 @@ RC CharType::set_value_from_str(Value &val, const string &data) const
 RC CharType::cast_to(const Value &val, AttrType type, Value &result) const
 {
   switch (type) {
+
+    case AttrType::DATES: {
+    result.attr_type_ = AttrType::DATES;
+    int y, m, d;
+    if (sscanf(val.value_.pointer_value_, "%d-%d-%d", &y, &m, &d) != 3) {
+        LOG_WARN("invalid date format:%s", val.value_.pointer_value_);
+        return RC::INVALID_ARGUMENT;
+    }
+    
+    bool check_ret = DateType::check_date(y, m, d);
+    if (!check_ret) {
+        LOG_WARN("invalid date format:%s", val.value_.pointer_value_);
+        return RC::INVALID_ARGUMENT;
+    }
+    
+    result.set_date(10000 * y + 100 * m + d);
+    return RC::SUCCESS;
+    }
+
     default: return RC::UNIMPLEMENTED;
   }
   return RC::SUCCESS;
 }
 
-int CharType::cast_cost(AttrType type)
-{
-  if (type == AttrType::CHARS) {
-    return 0;
-  }
-  return INT32_MAX;
+int CharType::cast_cost(AttrType type) {
+    if (type == AttrType::CHARS) {
+        return 0;
+    }
+    if (type == AttrType::DATES) {
+        return 1;
+    }
+    return INT32_MAX;
 }
 
 RC CharType::to_string(const Value &val, string &result) const
